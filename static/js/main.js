@@ -546,118 +546,118 @@ createApp({
             historic_chart.update();
 
 
-            update_historic_end_at_fire_age(simulation_result)
+            //            update_historic_end_at_fire_age(simulation_result)
 
 
         };
 
-        const update_historic_end_at_fire_age = (simulation_result) => {
-            console.log('simulation_result > ', simulation_result)
-            const historic_chart_data = Object.keys(simulation_result).map(year => {
-                // Find the balance when age is 35 for this year
+        // const update_historic_end_at_fire_age = (simulation_result) => {
+        //     console.log('simulation_result > ', simulation_result)
+        //     const historic_chart_data = Object.keys(simulation_result).map(year => {
+        //         // Find the balance when age is 35 for this year
 
-                var amount_at_year = simulation_result[year].find(item => item.year === state.fire_age);
+        //         var amount_at_year = simulation_result[year].find(item => item.year === state.fire_age);
 
-                if (amount_at_year == undefined) {
-                    return {};
-                } else {
-                    return {
-                        x: parseInt(year), // Use the year as x
-                        y: amount_at_year.balance // Use the balance at age 35 as y
-                    };
-                };
-            }) // Remove null values from the final array
+        //         if (amount_at_year == undefined) {
+        //             return {};
+        //         } else {
+        //             return {
+        //                 x: parseInt(year), // Use the year as x
+        //                 y: amount_at_year.balance // Use the balance at age 35 as y
+        //             };
+        //         };
+        //     }) // Remove null values from the final array
 
-            const historic_end_at_fire_age_labels = historic_chart_data.map(item => item.x);
-            const historic_end_at_fire_age_values = historic_chart_data.map(item => item.y);
-
-
-            function getColor(value) {
-                return value > 0 ? 'rgba(0, 128, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)';
-            }
-
-            const chartData = {
-                labels: historic_end_at_fire_age_labels,
-                datasets: []
-            };
-
-            // console.log(chartData)
-
-            historic_end_at_fire_age.data.labels = historic_end_at_fire_age_labels
-            historic_end_at_fire_age.data.datasets = [{
-                label: 'Balance',
-                data: historic_end_at_fire_age_values,
-                backgroundColor: historic_end_at_fire_age_values.map(getColor),
-                borderColor: historic_end_at_fire_age_values.map(getColor),
-                borderWidth: 1
-            }]
-            historic_end_at_fire_age.update();
+        //     const historic_end_at_fire_age_labels = historic_chart_data.map(item => item.x);
+        //     const historic_end_at_fire_age_values = historic_chart_data.map(item => item.y);
 
 
-        }
+        //     function getColor(value) {
+        //         return value > 0 ? 'rgba(0, 128, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+        //     }
 
-        const set_up_historic_end_at_fire_age = () => {
-            const ctx = document.getElementById('historic_end_at_fire_age').getContext('2d');
-            historic_end_at_fire_age = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        pointRadius: 0, // Remove dots
-                        fill: true,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        data: [],
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.4, // Adjust for smoothness
-                        borderWidth: 2
-                    }]
-                },
+        //     const chartData = {
+        //         labels: historic_end_at_fire_age_labels,
+        //         datasets: []
+        //     };
 
-                options: {
+        //     // console.log(chartData)
 
-                    responsive: true,
-                    maintainAspectRatio: false, // Optional, if you want to control aspect ratio
-
-                    indexAxis: 'y', // Set indexAxis to 'y' for horizontal bars
-
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Age'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Balance'
-                            }
-                        }
-                    },
-                    plugins: {
-
-                        title: {
-                            display: true, // Enable the title
-                            text: 'Ending Balance at Fire Age' // Set the title text
-                        },
+        //     historic_end_at_fire_age.data.labels = historic_end_at_fire_age_labels
+        //     historic_end_at_fire_age.data.datasets = [{
+        //         label: 'Balance',
+        //         data: historic_end_at_fire_age_values,
+        //         backgroundColor: historic_end_at_fire_age_values.map(getColor),
+        //         borderColor: historic_end_at_fire_age_values.map(getColor),
+        //         borderWidth: 1
+        //     }]
+        //     historic_end_at_fire_age.update();
 
 
-                        legend: {
-                            position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
-                            align: 'start', // Can be 'start', 'center', or 'end'
-                            labels: {
-                                boxWidth: 10,
-                                boxHeight: 1
-                            }
-                        }
-                    }
+        // }
 
-                }
-            });
+        // const set_up_historic_end_at_fire_age = () => {
+        //     const ctx = document.getElementById('historic_end_at_fire_age').getContext('2d');
+        //     historic_end_at_fire_age = new Chart(ctx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: [],
+        //             datasets: [{
+        //                 pointRadius: 0, // Remove dots
+        //                 fill: true,
+        //                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        //                 data: [],
+        //                 borderColor: 'rgb(75, 192, 192)',
+        //                 tension: 0.4, // Adjust for smoothness
+        //                 borderWidth: 2
+        //             }]
+        //         },
+
+        //         options: {
+
+        //             responsive: true,
+        //             maintainAspectRatio: false, // Optional, if you want to control aspect ratio
+
+        //             indexAxis: 'y', // Set indexAxis to 'y' for horizontal bars
+
+        //             scales: {
+        //                 x: {
+        //                     title: {
+        //                         display: true,
+        //                         text: 'Age'
+        //                     }
+        //                 },
+        //                 y: {
+        //                     title: {
+        //                         display: true,
+        //                         text: 'Balance'
+        //                     }
+        //                 }
+        //             },
+        //             plugins: {
+
+        //                 title: {
+        //                     display: true, // Enable the title
+        //                     text: 'Ending Balance at Fire Age' // Set the title text
+        //                 },
+
+
+        //                 legend: {
+        //                     position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
+        //                     align: 'start', // Can be 'start', 'center', or 'end'
+        //                     labels: {
+        //                         boxWidth: 10,
+        //                         boxHeight: 1
+        //                     }
+        //                 }
+        //             }
+
+        //         }
+        //     });
 
 
 
-        };
+        // };
 
 
         function monteCarloInvestmentReturns({ years, expectedReturn, volatility = 0.1, trials = 10000 }) {
@@ -700,19 +700,11 @@ createApp({
         const update = () => {
 
             document.getElementById("current_age").addEventListener("input", function () {
-                localStorage.setItem("current_age", this.value);
+                state.setItem("current_age", this.value);
             });
 
             update_fire_chart();
             update_historic_chart();
-        };
-
-        const set_up_local_storage = () => {
-
-            const storedValue = localStorage.getItem('current_age');
-            const defaultValue = 25;
-
-            const value = storedValue !== null ? storedValue : defaultValue;
         };
 
 
@@ -720,11 +712,10 @@ createApp({
         watch(state, () => update(), { deep: true });
 
         onMounted(() => {
-            set_up_local_storage()
             set_up_tip_tools()
             set_up_fire_chart()
             set_up_historic_chart()
-            set_up_historic_end_at_fire_age()
+            // set_up_historic_end_at_fire_age()
         });
 
         return {
