@@ -49,7 +49,6 @@ createApp({
             ending_balance = 0
 
             for (let retirement_age = state.current_age; retirement_age <= state.life_span; retirement_age++) {
-                console.log('checking ... retirement_age> ', retirement_age)
 
                 let balance = state.balance;
                 let income = state.income
@@ -73,14 +72,14 @@ createApp({
                     income *= (1 + state.income_increase / 100)
                     expense *= (1 + state.inflation / 100);
 
-                    console.log('age> ', i, 'balance> ', balance,)
+                    // console.log('age> ', i, 'balance> ', balance,)
                     dictionary[i] = balance
 
                     balance += savings
                     balance *= (1 + state.return / 100);
                 }
                 ending_balance = balance
-                console.log('retirement_age> ', retirement_age, 'ending_balance> ', Number(ending_balance).toFixed(2), 'amount> ', dictionary[retirement_age])
+                // console.log('retirement_age> ', retirement_age, 'ending_balance> ', Number(ending_balance).toFixed(2), 'amount> ', dictionary[retirement_age])
 
                 if (ending_balance > 0) {
                     state.fire_age = retirement_age
@@ -231,8 +230,8 @@ createApp({
                 y: slope * point.year + intercept
             }));
 
-            console.log('-----------')
-            console.log('labels> ', data.map(d => d.year))
+            // console.log('-----------')
+            // console.log('labels> ', data.map(d => d.year))
 
 
             fire_chart.data.labels = data.map(d => d.year);
@@ -405,7 +404,7 @@ createApp({
 
 
             let year_span = state.life_span - state.current_age
-            // // console.log('year_span> ', year_span)
+            // // // console.log('year_span> ', year_span)
 
             let sliced_performances = {}
             let check = true
@@ -420,23 +419,23 @@ createApp({
                 const date = new Date(timestamp); // Convert to Date object
                 const year = date.getFullYear(); // Extract the year
 
-                // // console.log(year); // Output: 1980
+                // // // console.log(year); // Output: 1980
 
                 sliced_performances[year] = msci_data.slice(start, end).map(row => row["return"])
                 start++;
                 end++;
             }
 
-            // // console.log('sliced_performances> ', sliced_performances)
-            // // console.log('sliced_performances.length> ', sliced_performances.length)
+            // // // console.log('sliced_performances> ', sliced_performances)
+            // // // console.log('sliced_performances.length> ', sliced_performances.length)
 
             const simulation_result = {}
 
             for (const year in sliced_performances) {
-                // // console.log('year> ', year)
+                // // // console.log('year> ', year)
                 const slice = sliced_performances[year];
 
-                // // console.log('slice.length> ', slice.length)
+                // // // console.log('slice.length> ', slice.length)
                 let data = []
                 let balance = state.balance
                 let income = state.income
@@ -468,11 +467,11 @@ createApp({
                     expense *= (1 + state.inflation / 100);
                     balance += savings
 
-                    // console.log(i)
-                    // console.log('slice length', slice.length)
+                    // // console.log(i)
+                    // // console.log('slice length', slice.length)
                     balance *= (1 + slice[i]);
 
-                    // console.log('age> ', i + state.current_age, 'balance> ', balance, 'slice> ', slice[i])
+                    // // console.log('age> ', i + state.current_age, 'balance> ', balance, 'slice> ', slice[i])
                 }
                 simulation_result[year] = data
             }
@@ -527,8 +526,8 @@ createApp({
                 labels.push(state.current_age + i)
             };
 
-            // console.log('labels> ', labels)
-            // console.log('datasets> ', datasets)
+            // // console.log('labels> ', labels)
+            // // console.log('datasets> ', datasets)
 
             historic_chart.data.labels = labels
             historic_chart.data.datasets = datasets
@@ -545,8 +544,8 @@ createApp({
                 };
             }) // Remove null values from the final array
 
-            console.log('historic_chart_data> ')
-            console.log(historic_chart_data)
+            // console.log('historic_chart_data> ')
+            // console.log(historic_chart_data)
 
             const historic_bar_chart_labels = historic_chart_data.map(item => item.x);
             const historic_bar_chart_values = historic_chart_data.map(item => item.y);
@@ -561,7 +560,7 @@ createApp({
                 datasets: []
             };
 
-            console.log(chartData)
+            // console.log(chartData)
 
             historic_bar_chart.data.labels = historic_bar_chart_labels
             historic_bar_chart.data.datasets = [{
@@ -571,7 +570,7 @@ createApp({
                 borderColor: historic_bar_chart_values.map(getColor),
                 borderWidth: 1
             }]
-            historic_bar_chart.update();
+            // historic_bar_chart.update();
 
 
 
@@ -629,6 +628,43 @@ createApp({
 
 
         };
+
+
+        function monteCarloInvestmentReturns({ years, expectedReturn, volatility = 0.1, trials = 10000 }) {
+            // Generate normally distributed random numbers using Box-Muller transform
+            function getNormal() {
+                let u1 = 0, u2 = 0;
+                while (u1 === 0) u1 = Math.random(); // Avoid zero values
+                while (u2 === 0) u2 = Math.random();
+                return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            }
+
+            const results = [];
+            for (let i = 0; i < trials; i++) {
+                let portfolioValue = 1; // Normalized initial investment
+                const annualReturns = [];
+
+                for (let year = 0; year < years; year++) {
+                    const randomReturn = expectedReturn + volatility * getNormal();
+                    portfolioValue *= (1 + randomReturn);
+                    annualReturns.push(randomReturn);
+                }
+
+                results.push({
+                    finalValue: portfolioValue,
+                    annualReturns: annualReturns
+                });
+            }
+
+            return results;
+        }
+
+        // Example usage:
+        const simulationResults = monteCarloInvestmentReturns({
+            years: 10,
+            expectedReturn: 0.07, // 7% annual expected return
+            volatility: 0.15      // 15% annual volatility
+        });
 
 
         const update = () => {
