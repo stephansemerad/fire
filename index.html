@@ -260,8 +260,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="variance"
-                                        data-tippy-content="">Variance Return (%)
+                                    <label class="block text-gray-800 font-bold mb-1" for="variance">Variance Return (%)
                                         <span data-tippy-content="Variance in investment returns plus / minus %">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
                                         </span>
@@ -326,7 +325,7 @@
                                                         {{
                                                         Number(row.balance /
                                                         1000).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits: 0}) }}
+                                                        maximumFractionDigits: 0}) }} K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
                                                         {{
@@ -334,7 +333,7 @@
                                                         1000
                                                         ).toLocaleString("en-US", {minimumFractionDigits: 0,
                                                         maximumFractionDigits:
-                                                        0}) }}
+                                                        0}) }} K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
                                                         {{
@@ -342,7 +341,7 @@
                                                         1000
                                                         ).toLocaleString("en-US", {minimumFractionDigits: 0,
                                                         maximumFractionDigits:
-                                                        0}) }}
+                                                        0}) }} K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
                                                         :class="{'text-red-500': row.savings < 0}">

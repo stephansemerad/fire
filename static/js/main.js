@@ -8,7 +8,7 @@ createApp({
 
         let fire_chart;
         let historic_chart;
-        let historic_bar_chart
+        let historic_end_at_fire_age
 
         const state = reactive({
             current_age: 35,
@@ -193,6 +193,14 @@ createApp({
                         }
                     },
                     plugins: {
+
+
+                        title: {
+                            display: true, // Enable the title
+                            text: 'Simulation Fire Constant Return' // Set the title text
+                        },
+
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -365,6 +373,10 @@ createApp({
                 },
 
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Optional, if you want to control aspect ratio
+
+
                     scales: {
                         x: {
                             title: {
@@ -380,6 +392,12 @@ createApp({
                         }
                     },
                     plugins: {
+
+                        title: {
+                            display: true, // Enable the title
+                            text: 'Simulation MSCI World'
+                        },
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -392,12 +410,6 @@ createApp({
 
                 }
             });
-
-
-
-
-
-
         };
 
         const update_historic_chart = () => {
@@ -419,7 +431,7 @@ createApp({
                 const date = new Date(timestamp); // Convert to Date object
                 const year = date.getFullYear(); // Extract the year
 
-                // // // console.log(year); // Output: 1980
+                console.log(year); // Output: 1980
 
                 sliced_performances[year] = msci_data.slice(start, end).map(row => row["return"])
                 start++;
@@ -534,21 +546,30 @@ createApp({
             historic_chart.update();
 
 
+            update_historic_end_at_fire_age(simulation_result)
+
+
+        };
+
+        const update_historic_end_at_fire_age = (simulation_result) => {
+            console.log('simulation_result > ', simulation_result)
             const historic_chart_data = Object.keys(simulation_result).map(year => {
                 // Find the balance when age is 35 for this year
-                const amount_at_year = simulation_result[year].find(item => item.year === state.fire_age);
 
-                return {
-                    x: parseInt(year), // Use the year as x
-                    y: amount_at_year.balance // Use the balance at age 35 as y
+                var amount_at_year = simulation_result[year].find(item => item.year === state.fire_age);
+
+                if (amount_at_year == undefined) {
+                    return {};
+                } else {
+                    return {
+                        x: parseInt(year), // Use the year as x
+                        y: amount_at_year.balance // Use the balance at age 35 as y
+                    };
                 };
             }) // Remove null values from the final array
 
-            // console.log('historic_chart_data> ')
-            // console.log(historic_chart_data)
-
-            const historic_bar_chart_labels = historic_chart_data.map(item => item.x);
-            const historic_bar_chart_values = historic_chart_data.map(item => item.y);
+            const historic_end_at_fire_age_labels = historic_chart_data.map(item => item.x);
+            const historic_end_at_fire_age_values = historic_chart_data.map(item => item.y);
 
 
             function getColor(value) {
@@ -556,30 +577,28 @@ createApp({
             }
 
             const chartData = {
-                labels: historic_bar_chart_labels,
+                labels: historic_end_at_fire_age_labels,
                 datasets: []
             };
 
             // console.log(chartData)
 
-            historic_bar_chart.data.labels = historic_bar_chart_labels
-            historic_bar_chart.data.datasets = [{
+            historic_end_at_fire_age.data.labels = historic_end_at_fire_age_labels
+            historic_end_at_fire_age.data.datasets = [{
                 label: 'Balance',
-                data: historic_bar_chart_values,
-                backgroundColor: historic_bar_chart_values.map(getColor),
-                borderColor: historic_bar_chart_values.map(getColor),
+                data: historic_end_at_fire_age_values,
+                backgroundColor: historic_end_at_fire_age_values.map(getColor),
+                borderColor: historic_end_at_fire_age_values.map(getColor),
                 borderWidth: 1
             }]
-            // historic_bar_chart.update();
+            historic_end_at_fire_age.update();
 
 
+        }
 
-        };
-
-
-        const set_up_historic_bar_chart = () => {
-            const ctx = document.getElementById('historic_bar_chart').getContext('2d');
-            historic_bar_chart = new Chart(ctx, {
+        const set_up_historic_end_at_fire_age = () => {
+            const ctx = document.getElementById('historic_end_at_fire_age').getContext('2d');
+            historic_end_at_fire_age = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: [],
@@ -595,6 +614,10 @@ createApp({
                 },
 
                 options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false, // Optional, if you want to control aspect ratio
+
                     indexAxis: 'y', // Set indexAxis to 'y' for horizontal bars
 
                     scales: {
@@ -612,6 +635,13 @@ createApp({
                         }
                     },
                     plugins: {
+
+                        title: {
+                            display: true, // Enable the title
+                            text: 'Ending Balance at Fire Age' // Set the title text
+                        },
+
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -668,20 +698,33 @@ createApp({
 
 
         const update = () => {
+
+            document.getElementById("current_age").addEventListener("input", function () {
+                localStorage.setItem("current_age", this.value);
+            });
+
             update_fire_chart();
             update_historic_chart();
         };
 
+        const set_up_local_storage = () => {
+
+            const storedValue = localStorage.getItem('current_age');
+            const defaultValue = 25;
+
+            const value = storedValue !== null ? storedValue : defaultValue;
+        };
 
 
 
         watch(state, () => update(), { deep: true });
 
         onMounted(() => {
+            set_up_local_storage()
             set_up_tip_tools()
             set_up_fire_chart()
             set_up_historic_chart()
-            set_up_historic_bar_chart()
+            set_up_historic_end_at_fire_age()
         });
 
         return {
