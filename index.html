@@ -83,7 +83,7 @@
 
                     <div class="text-sm tracking-tight text-gray-900">
                         This calculator, built by
-                        <b class="text-indigo-400">Stephan M. Semerad</b>, simulates your potential FIRE number using
+                        <b class="text-indigo-700">Stephan M. Semerad</b>, simulates your potential FIRE number using
                         several
                         methods:
                         <ol class="list-disc  list-inside pl-4">
@@ -275,7 +275,7 @@
                             </div>
                         </div>
                         <div class="col-span-1 md:col-span-6">
-                            <canvas id="fire_chart"></canvas>
+                            <canvas height="400" id="fire_chart"></canvas>
                         </div>
                         <div class="col-span-1 md:col-span-6">
                             <canvas height="400" id="historic_chart"></canvas>
@@ -287,7 +287,7 @@
 
                     </div>
 
-                    <!-- form -->
+                    <!-- table -->
                     <div class="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2 my-2">
                         <div>
                             <div class="mt-8 flow-root">
@@ -303,14 +303,25 @@
                                                         Balance
                                                     </th>
                                                     <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Income
+                                                        Income (Yearly)
                                                     </th>
                                                     <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Expenses
+                                                        Expenses (Yearly)
                                                     </th>
                                                     <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Savings
+                                                        Savings (Yearly)
                                                     </th>
+
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Income (Monthly)
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Expenses (Monthly)
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Savings (Monthly)
+                                                    </th>
+
                                                     <th class="px-1 py-1 text-right font-semibold text-gray-900">
                                                         Deposits / Withdrawals (%)
                                                     </th>
@@ -319,7 +330,7 @@
                                             </thead>
                                             <tbody class="divide-y divide-gray-200">
                                                 <tr v-for="row in table_data" :key="row.year"
-                                                    :class="{'bg-indigo-100 font-bold text-indigo-900': row.year === state.fire_age}">
+                                                    :class="{'bg-indigo-100 font-bold text-indigo-700': row.year === state.fire_age}">
                                                     <td class="px-2 py-1 whitespace-nowrap text-gray-800">
                                                         {{ row.year }}
                                                     </td>
@@ -327,7 +338,7 @@
                                                         {{
                                                         Number(row.balance /
                                                         1000).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits: 0}) }} K
+                                                        maximumFractionDigits: 0}) }}K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
                                                         {{
@@ -335,7 +346,7 @@
                                                         1000
                                                         ).toLocaleString("en-US", {minimumFractionDigits: 0,
                                                         maximumFractionDigits:
-                                                        0}) }} K
+                                                        0}) }}K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
                                                         {{
@@ -343,7 +354,7 @@
                                                         1000
                                                         ).toLocaleString("en-US", {minimumFractionDigits: 0,
                                                         maximumFractionDigits:
-                                                        0}) }} K
+                                                        0}) }}K
                                                     </td>
                                                     <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
                                                         :class="{'text-red-500': row.savings < 0}">
@@ -352,7 +363,35 @@
                                                         1000
                                                         ).toLocaleString("en-US", {minimumFractionDigits: 0,
                                                         maximumFractionDigits:
-                                                        0}) }}
+                                                        0}) }}K
+                                                    </td>
+
+
+
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                        {{
+                                                        Number(row.income /
+                                                        1000 / 12
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}K
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                        {{
+                                                        Number(row.expense /
+                                                        1000 / 12
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}K
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                        :class="{'text-red-500': row.savings < 0}">
+                                                        {{
+                                                        Number(row.savings /
+                                                        1000 / 12
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}K
                                                     </td>
 
 
