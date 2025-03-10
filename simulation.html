@@ -156,23 +156,12 @@
                     fire_number: null,
                 });
 
-                function canSliceData(start, end, dataLength) {
-                    return start >= 0 && end < dataLength && start <= end;
-                }
 
-                function getRandomColor() {
-                    const letters = '0123456789ABCDEF';
-                    let color = '#';
-                    for (let i = 0; i < 6; i++) {
-                        color += letters[Math.floor(Math.random() * 16)];
-                    }
-                    return color;
-                }
 
                 let myChart; // Declare chart reference here
 
 
-                const updateSimulationChart = () => {
+                const update_simulation = () => {
 
                     let year_span = state.life_span - state.current_age
                     // // console.log('year_span> ', year_span)
@@ -337,58 +326,13 @@
 
                 }
 
-                watch(state, () => updateSimulationChart(), { deep: true });
+                watch(state, () => update_simulation(), { deep: true });
 
                 onMounted(() => {
 
 
-                    const ctx = document.getElementById('simulation_chart').getContext('2d');
-                    chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                pointRadius: 0, // Remove dots
-                                fill: true,
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                data: [],
-                                borderColor: 'rgb(75, 192, 192)',
-                                tension: 0.4, // Adjust for smoothness
-                                borderWidth: 2
-                            }]
-                        },
 
-                        options: {
-                            scales: {
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Age'
-                                    }
-                                },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Balance'
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
-                                    align: 'start', // Can be 'start', 'center', or 'end'
-                                    labels: {
-                                        boxWidth: 10,
-                                        boxHeight: 1
-                                    }
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    updateSimulationChart();
+                    update_simulation();
 
 
 
