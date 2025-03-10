@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        (FIRE) Financial Independe / Retire Early Simulator
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+
+    <script defer src="./static/js/brands.js"></script>
+    <script defer src="./static/js/solid.js"></script>
+    <script defer src="./static/js/fontawesome.js"></script>
+
+    <script defer src="./static/js/main.js"></script>
+
+
+    <style>
+        .tippy-content {
+            font-size: 12px;
+            /* Adjust font size */
+        }
+    </style>
+
+</head>
+
+<body class="text-[12px]">
+
+
+    <div class="h-full">
+        <nav class="border-b border-gray-200 bg-white">
+            <div class="mx-auto  px-4 sm:px-2 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <div class="flex">
+
+                        <div class="hidden sm:-my-px  sm:flex sm:space-x-8">
+                            <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+                            <a href="#"
+                                class="text-lg font-bold tracking-tight text-gray-900 inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 "
+                                aria-current="page">(FIRE) Financial Independe / Retire Early Simulator</a>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- mobile -->
+            <div class="sm:hidden" id="mobile-menu">
+                <div class="space-y-1 pt-2 pb-3">
+                    <a href="#"
+                        class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pr-4 pl-3 text-base font-medium text-indigo-700"
+                        aria-current="page">(FIRE) Financial Independe / Retire Early Simulator</a>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="py-1">
+            <header>
+                <div class="mx-auto px-4 sm:px-2 lg:px-8">
+                    <div class="text-xs tracking-tight text-gray-900 mb-4">
+                        <b>FIRE (Financial Independence, Retire Early)</b> is a lifestyle strategy that involves
+                        aggressively saving a large
+                        portion of your income, typically 50% to 75%, and living frugally to accumulate wealth. The goal
+                        is
+                        to retire early,
+                        often by age 40 or 50, with enough savings—usually 25 times your annual expenses—to cover living
+                        costs without
+                        needing to work.
+                    </div>
+
+                    <div class="text-xs tracking-tight text-gray-900">
+                        This calculator, built by Stephan M. Semerad, simulates your potential FIRE number using several
+                        methods:
+                        <ol class="list-disc  list-inside pl-4">
+                            <li><strong>Fixed Projection:</strong> Assumes constant returns.</li>
+                            <li><strong>MSCI World Projection:</strong> Based on historic data.</li>
+                        </ol>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="mx-auto px-4 py-8 sm:px-2 lg:px-8" id="app">
+
+
+                    <!-- message -->
+                    <div :class="{
+                                'bg-red-100 border border-red-400 text-red-700': state.retirement_age < state.fire_age,
+                                'bg-indigo-100 border border-indigo-400 text-indigo-700': state.retirement_age >= state.fire_age}"
+                        class="px-4 py-1 rounded-xs relative mb-6 " role="alert">
+                        <span class="block sm:inline">
+                            <strong class="font-bold">
+                                {{ state.retirement_age < state.fire_age ? 'Apologies ' : 'Congratulations! ' }}
+                                    </strong>
+                                    <span v-if="state.retirement_age < state.fire_age">
+                                        Your retirement age is <strong
+                                            class="font-bold">{{state.retirement_age}}</strong>,
+                                        which is earlier than your FIRE age of <strong
+                                            class="font-bold">{{state.fire_age}}</strong>.
+                                        You need to adjust your savings or strategy to retire earlier.
+                                    </span>
+                                    <span v-else>
+                                        You will have reached FIRE in <strong class="font-bold">{{state.fire_age -
+                                            state.current_age}}</strong> years at <strong
+                                            class="font-bold">{{state.fire_age}}</strong>
+                                        with <strong class="font-bold">{{Number(state.fire_number /
+                                            1000).toFixed(2)}}K</strong>.
+                                        You're on track to retire early!
+                                    </span>
+                        </span>
+                    </div>
+
+
+
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
+                        <div class="col-span-1 md:col-span-6 ">
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-2 my-2">
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="current_age">
+                                        Current Age
+
+                                        <span data-tippy-content="Your current age in years">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.current_age" type="number" id="current_age"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_age">
+                                        Expected Retirement Age
+                                        <span data-tippy-content="The age you plan to retire">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.retirement_age" type="number" id="retirement_age"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="life_span">
+                                        Life Span
+                                        <span
+                                            data-tippy-content="Your expected life span in years / years to display on the Graph">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.life_span" type="number" id="life_span"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="balance">
+                                        Initial Balance Amount
+                                        <span
+                                            data-tippy-content="Your current savings balance / Starting or Initial amount">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.balance" type="number" id="balance"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="income">
+                                        Annual Net Income
+                                        <span data-tippy-content="Your annual income after taxes ">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.income" type="number" id="income"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="expense">
+                                        Annual Expenses
+                                        <span data-tippy-content="Your annual expenses / how much you spend per year">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.expense" type="number" id="expense"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_income">
+                                        Annual Retirement Income
+                                        <span data-tippy-content="Your expected annual income during retirement">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.retirement_income" type="number" id="retirement_income"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_expense">
+                                        Annual Retirement Expense
+
+                                        <span data-tippy-content="Your expected annual expenses during retirement">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+
+                                    </label>
+                                    <input v-model="state.retirement_expense" type="number" id="retirement_expense"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="return">
+                                        Investment Return (%)
+                                        <span data-tippy-content="Expected annual return on your investments">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.return" type="number" id="return"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="inflation">
+                                        Inflation (%)
+                                        <span data-tippy-content="Expected annual inflation rate">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.inflation" type="number" id="inflation"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="income_increase">
+                                        Income Increase (%)
+                                        <span data-tippy-content="Expected annual increase in income">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.income_increase" type="number" id="income_increase"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-800 font-bold mb-1" for="variance"
+                                        data-tippy-content="">Variance Return (%)
+                                        <span data-tippy-content="Variance in investment returns plus / minus %">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.variance" type="number" id="variance"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-span-1 md:col-span-6">
+                            <div class="chart-container w-full h-full">
+                                <canvas id="fire_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- form -->
+                    <div class="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2 my-2">
+                        <div>
+                            <div class="mt-8 flow-root">
+                                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                        <table class="min-w-full divide-y divide-gray-300">
+                                            <thead>
+                                                <tr>
+                                                    <th class="px-2 py-1 text-left font-semibold text-gray-900 sm:pl-0">
+                                                        Year
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Balance
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Income
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Expenses
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Savings
+                                                    </th>
+                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                        Deposits / Withdrawals (%)
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200">
+                                                <tr v-for="row in table_data" :key="row.year"
+                                                    :class="{'bg-indigo-100 font-bold text-indigo-900': row.year === state.fire_age}">
+                                                    <td class="px-2 py-1 whitespace-nowrap text-gray-800">
+                                                        {{ row.year }}
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                        {{
+                                                        Number(row.balance /
+                                                        1000).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits: 0}) }}
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                        {{
+                                                        Number(row.income /
+                                                        1000
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                        {{
+                                                        Number(row.expense /
+                                                        1000
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}
+                                                    </td>
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                        :class="{'text-red-500': row.savings < 0}">
+                                                        {{
+                                                        Number(row.savings /
+                                                        1000
+                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                        maximumFractionDigits:
+                                                        0}) }}
+                                                    </td>
+
+
+                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                        :class="{'text-red-500': (row.savings / row.balance) < 0}">{{
+                                                        Number((row.savings /
+                                                        row.balance) * 100 ).toLocaleString("en-US",
+                                                        {minimumFractionDigits:
+                                                        2,
+                                                        maximumFractionDigits: 2}) }}%
+                                                    </td>
+                                                </tr>
+                                                <!-- continue ... -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
