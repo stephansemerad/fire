@@ -275,150 +275,169 @@
                             </div>
                         </div>
                         <div class="col-span-1 md:col-span-6">
-                            <canvas height="400" id="fire_chart"></canvas>
+                            <canvas height="200" id="fire_chart"></canvas>
                         </div>
                         <div class="col-span-1 md:col-span-6">
-                            <canvas height="400" id="historic_chart"></canvas>
+                            <canvas height="200" id="msci_world"></canvas>
                         </div>
 
                         <div class="col-span-1 md:col-span-6">
-                            <canvas height="400" id="historic_bar_chart"></canvas>
+                            <canvas height="200" id="sp500"></canvas>
                         </div>
 
-                    </div>
+                        <div class="col-span-1 md:col-span-12">
+                            <!-- table -->
+                            <div class="">
+                                <div>
+                                    <div class="mt-8 flow-root">
+                                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                                <table class="min-w-full divide-y divide-gray-300">
+                                                    <thead>
+                                                        <tr>
+                                                            <th
+                                                                class="px-2 py-1 text-left font-semibold text-gray-900 sm:pl-0">
+                                                                Year
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Balance
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Income (Yearly)
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Expenses (Yearly)
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Savings (Yearly)
+                                                            </th>
 
-                    <!-- table -->
-                    <div class="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2 my-2">
-                        <div>
-                            <div class="mt-8 flow-root">
-                                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                        <table class="min-w-full divide-y divide-gray-300">
-                                            <thead>
-                                                <tr>
-                                                    <th class="px-2 py-1 text-left font-semibold text-gray-900 sm:pl-0">
-                                                        Year
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Balance
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Income (Yearly)
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Expenses (Yearly)
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Savings (Yearly)
-                                                    </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Income (Monthly)
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Expenses (Monthly)
+                                                            </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Savings (Monthly)
+                                                            </th>
 
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Income (Monthly)
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Expenses (Monthly)
-                                                    </th>
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Savings (Monthly)
-                                                    </th>
+                                                            <th
+                                                                class="px-1 py-1 text-right font-semibold text-gray-900">
+                                                                Deposits / Withdrawals (%)
+                                                            </th>
 
-                                                    <th class="px-1 py-1 text-right font-semibold text-gray-900">
-                                                        Deposits / Withdrawals (%)
-                                                    </th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-gray-200">
-                                                <tr v-for="row in table_data" :key="row.year"
-                                                    :class="{'bg-indigo-100 font-bold text-indigo-700': row.year === state.fire_age}">
-                                                    <td class="px-2 py-1 whitespace-nowrap text-gray-800">
-                                                        {{ row.year }}
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
-                                                        {{
-                                                        Number(row.balance /
-                                                        1000).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits: 0}) }}K
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
-                                                        {{
-                                                        Number(row.income /
-                                                        1000
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
-                                                        {{
-                                                        Number(row.expense /
-                                                        1000
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
-                                                        :class="{'text-red-500': row.savings < 0}">
-                                                        {{
-                                                        Number(row.savings /
-                                                        1000
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
-
-
-
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
-                                                        {{
-                                                        Number(row.income /
-                                                        1000 / 12
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
-                                                        {{
-                                                        Number(row.expense /
-                                                        1000 / 12
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
-                                                        :class="{'text-red-500': row.savings < 0}">
-                                                        {{
-                                                        Number(row.savings /
-                                                        1000 / 12
-                                                        ).toLocaleString("en-US", {minimumFractionDigits: 0,
-                                                        maximumFractionDigits:
-                                                        0}) }}K
-                                                    </td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-200">
+                                                        <tr v-for="row in table_data" :key="row.year"
+                                                            :class="{'bg-indigo-100 font-bold text-indigo-700': row.year === state.fire_age}">
+                                                            <td class="px-2 py-1 whitespace-nowrap text-gray-800">
+                                                                {{ row.year }}
+                                                            </td>
+                                                            <td
+                                                                class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                                {{
+                                                                Number(row.balance /
+                                                                1000).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits: 0}) }}K
+                                                            </td>
+                                                            <td
+                                                                class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                                {{
+                                                                Number(row.income /
+                                                                1000
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
+                                                            <td
+                                                                class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                                {{
+                                                                Number(row.expense /
+                                                                1000
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
+                                                            <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                                :class="{'text-red-500': row.savings < 0}">
+                                                                {{
+                                                                Number(row.savings /
+                                                                1000
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
 
 
-                                                    <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
-                                                        :class="{'text-red-500': (row.savings / row.balance) < 0}">{{
-                                                        Number((row.savings /
-                                                        row.balance) * 100 ).toLocaleString("en-US",
-                                                        {minimumFractionDigits:
-                                                        2,
-                                                        maximumFractionDigits: 2}) }}%
-                                                    </td>
-                                                </tr>
-                                                <!-- continue ... -->
-                                            </tbody>
-                                        </table>
+
+                                                            <td
+                                                                class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                                {{
+                                                                Number(row.income /
+                                                                1000 / 12
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
+                                                            <td
+                                                                class="px-1 py-1 whitespace-nowrap text-gray-800 text-right">
+                                                                {{
+                                                                Number(row.expense /
+                                                                1000 / 12
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
+                                                            <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                                :class="{'text-red-500': row.savings < 0}">
+                                                                {{
+                                                                Number(row.savings /
+                                                                1000 / 12
+                                                                ).toLocaleString("en-US", {minimumFractionDigits: 0,
+                                                                maximumFractionDigits:
+                                                                0}) }}K
+                                                            </td>
+
+
+                                                            <td class="px-1 py-1 whitespace-nowrap text-gray-800 text-right"
+                                                                :class="{'text-red-500': (row.savings / row.balance) < 0}">
+                                                                {{
+                                                                Number((row.savings /
+                                                                row.balance) * 100 ).toLocaleString("en-US",
+                                                                {minimumFractionDigits:
+                                                                2,
+                                                                maximumFractionDigits: 2}) }}%
+                                                            </td>
+                                                        </tr>
+                                                        <!-- continue ... -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
                                     </div>
+
+
                                 </div>
 
+
+
+
                             </div>
-
-
                         </div>
 
 
-
-
                     </div>
+
                 </div>
             </main>
         </div>
