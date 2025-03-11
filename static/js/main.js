@@ -398,6 +398,7 @@ createApp({
             return { slope, intercept };
         };
 
+
         const set_up_fire_chart = () => {
 
             const ctx = document.getElementById('fire_chart').getContext('2d');
@@ -417,7 +418,10 @@ createApp({
                     }]
                 },
                 options: {
-
+                    title: {
+                        display: true,
+                        text: 'Fire Simulation'
+                    },
                     responsive: true,
                     maintainAspectRatio: false, // Optional, if you want to control aspect ratio
 
@@ -430,6 +434,14 @@ createApp({
                         }
                     },
                     plugins: {
+
+                        title: {
+                            display: true,
+                            text: 'Fire Simulation / Constant Return',  // Title text
+                            font: { size: 16 },  // Optional: Adjust font size
+                            padding: 2  // Optional: Add padding
+                        },
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -602,6 +614,7 @@ createApp({
                 },
 
                 options: {
+
                     scales: {
                         x: {
                             title: {
@@ -617,6 +630,15 @@ createApp({
                         }
                     },
                     plugins: {
+
+                        title: {
+                            display: true,
+                            text: 'MSCI World 10 year Simulation from Current Age' + state.current_age,  // Title text
+                            font: { size: 16 },  // Optional: Adjust font size
+                            padding: 2  // Optional: Add padding
+                        },
+
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -655,6 +677,7 @@ createApp({
                 },
 
                 options: {
+
                     scales: {
                         x: {
                             title: {
@@ -670,6 +693,14 @@ createApp({
                         }
                     },
                     plugins: {
+
+                        title: {
+                            display: true,
+                            text: 'S&P 500 10 year Simulation from Current Age' + state.current_age,  // Title text
+                            font: { size: 16 },  // Optional: Adjust font size
+                            padding: 2  // Optional: Add padding
+                        },
+
                         legend: {
                             position: 'right', // Can be 'top', 'left', 'bottom', or 'right'
                             align: 'start', // Can be 'start', 'center', or 'end'
@@ -688,14 +719,14 @@ createApp({
         const update_msci_world = () => {
 
 
-            let year_span = state.life_span - state.current_age
+            let year_span = 20
             // // // console.log('year_span> ', year_span)
 
             let sliced_performances = {}
             let check = true
 
             let start = 0;
-            let end = state.life_span - state.current_age + 1;
+            let end = 20 + 1;
 
             while (check) {
                 check = canSliceData(start, end, msci_data.length)
@@ -752,15 +783,11 @@ createApp({
                     expense *= (1 + state.inflation / 100);
                     balance += savings
 
-                    // // console.log(i)
-                    // // console.log('slice length', slice.length)
                     balance *= (1 + slice[i]);
 
-                    // // console.log('age> ', i + state.current_age, 'balance> ', balance, 'slice> ', slice[i])
                 }
                 simulation_result[year] = data
             }
-
 
 
             const datasets = Object.keys(simulation_result).map(year => {
@@ -807,7 +834,7 @@ createApp({
 
 
             let labels = []
-            for (let i = 0; i <= (state.life_span - state.current_age); i++) {
+            for (let i = 0; i <= (20); i++) {
                 labels.push(state.current_age + i)
             };
 
@@ -828,14 +855,14 @@ createApp({
         const update_sp500 = () => {
 
 
-            let year_span = state.life_span - state.current_age
+            let year_span = 20
             // // // console.log('year_span> ', year_span)
 
             let sliced_performances = {}
             let check = true
 
             let start = 0;
-            let end = state.life_span - state.current_age + 1;
+            let end = 20 + 1;
 
             while (check) {
                 check = canSliceData(start, end, sp500_data.length)
@@ -868,7 +895,7 @@ createApp({
                 let retirement_income = state.retirement_income
                 let retirement_expense = state.retirement_expense
 
-                for (let i = 0; i <= (state.life_span - state.current_age); i++) {
+                for (let i = 0; i <= (20); i++) {
 
                     savings = income - expense
                     data.push(
@@ -947,7 +974,7 @@ createApp({
 
 
             let labels = []
-            for (let i = 0; i <= (state.life_span - state.current_age); i++) {
+            for (let i = 0; i <= (20); i++) {
                 labels.push(state.current_age + i)
             };
 
