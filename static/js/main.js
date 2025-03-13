@@ -577,8 +577,8 @@ createApp({
             montecarlo_returns = montecarlo_investment_returns({
                 years: (state.life_span - state.current_age),
                 expectedReturn: state.return / 100, // 7% annual expected return
-                volatility: 0.15,      // 15% annual volatility
-                trials: 16
+                volatility: state.montecarlo_volatility / 100,      // 15% annual volatility
+                trials: state.montecarlo_trials
             });
 
             const simulation_result = {}
