@@ -223,6 +223,7 @@ createApp({
         const update_fire_chart = () => {
 
             const data = calculate_investment();
+            console.log(data)
             const { slope, intercept } = calculate_liner_regression(data);
 
             table_data.value = data.map(point => ({
@@ -230,6 +231,11 @@ createApp({
                 balance: Number(point.balance).toFixed(2),
                 income: Number(point.income).toFixed(2),
                 expense: Number(point.expense).toFixed(2),
+
+                retirement_income: Number(point.retirement_income).toFixed(2),
+                retirement_expense: Number(point.retirement_expense).toFixed(2),
+
+
                 savings: Number(point.savings).toFixed(2),
             }));
 
