@@ -355,7 +355,7 @@ createApp({
             });
         };
 
-        const set_up_graph = (canvas_id, title) => {
+        const set_up_graph = (canvas_id = '', title = '') => {
             const ctx = document.getElementById(canvas_id).getContext('2d');
             return new Chart(ctx, {
                 type: 'line',
@@ -512,9 +512,9 @@ createApp({
             return datasets
         }
 
-        function get_simulation_labels() {
+        function get_simulation_labels(years = 20) {
             let labels = []
-            for (let i = 0; i <= (20); i++) {
+            for (let i = 0; i <= (years); i++) {
                 labels.push(state.current_age + i)
             };
             return labels
@@ -569,16 +569,13 @@ createApp({
             return results;
         }
 
-        // Example usage:
-
-
         const update_montecarlo = () => {
 
             montecarlo_returns = montecarlo_investment_returns({
-                years: 20,
+                years: (state.life_span - state.current_age),
                 expectedReturn: state.return / 100, // 7% annual expected return
                 volatility: 0.15,      // 15% annual volatility
-                trials: 100
+                trials: 10
             });
 
             const simulation_result = {}
@@ -591,9 +588,10 @@ createApp({
                 let expense = state.expense
                 let retirement_income = state.retirement_income
                 let retirement_expense = state.retirement_expense
-                slice = montecarlo_returns[trial]
+                let years = state.life_span - state.current_age
+                returns = montecarlo_returns[trial]
 
-                for (let i = 0; i <= (20); i++) {
+                for (let i = 0; i <= (years); i++) {
                     savings = income - expense
                     data.push(
                         {
@@ -615,12 +613,14 @@ createApp({
                     income *= (1 + state.income_increase / 100)
                     expense *= (1 + state.inflation / 100);
                     balance += savings
-                    balance *= (1 + slice[i]);
+                    balance *= (1 + returns[i]);
 
                 }
-
-
-                simulation_result['trial_' + trial] = data
+                let status = 'ok'
+                if (balance < 0) {
+                    status = 'notok'
+                }
+                simulation_result['trial_' + trial + '_' + status] = data
             }
 
 
@@ -691,7 +691,9 @@ createApp({
 
 
             montecarlo.data.datasets = datasets
-            montecarlo.data.labels = get_simulation_labels()
+            montecarlo.data.labels = get_simulation_labels(
+                state.life_span - state.current_age
+            )
             montecarlo.update()
         };
 
