@@ -570,18 +570,16 @@ createApp({
         }
 
         // Example usage:
-        const montecarlo_returns = montecarlo_investment_returns({
-            years: 20,
-            expectedReturn: state.return / 100, // 7% annual expected return
-            volatility: 0.15,      // 15% annual volatility
-            trials: 20
-        });
 
 
         const update_montecarlo = () => {
-            console.log('montecarlo')
-            console.log(montecarlo_returns.length)
 
+            montecarlo_returns = montecarlo_investment_returns({
+                years: 20,
+                expectedReturn: state.return / 100, // 7% annual expected return
+                volatility: 0.15,      // 15% annual volatility
+                trials: 100
+            });
 
             const simulation_result = {}
             for (const trial in montecarlo_returns) {
@@ -620,10 +618,11 @@ createApp({
                     balance *= (1 + slice[i]);
 
                 }
+
+
                 simulation_result['trial_' + trial] = data
             }
 
-            console.log('simulation_result>', simulation_result)
 
             const datasets = Object.keys(simulation_result).map(year => {
                 const data = simulation_result[year].map(item => ({
@@ -631,7 +630,6 @@ createApp({
                     y: item.balance
                 }));
 
-                console.log('simulation_result> ', simulation_result)
 
                 const endBalance = simulation_result[year][20].balance;
 
@@ -718,12 +716,11 @@ createApp({
 
             msci_world = set_up_graph('msci_world', 'MSCI World (20 yr)')
             sp500 = set_up_graph('sp500', 'S&P 500 (20 yr)')
-            montecarlo = set_up_graph('montecarlo', 'Montecarlo')
+            montecarlo = set_up_graph('montecarlo', 'Montecarlo (Volatility 15%)')
 
 
         });
 
-        console.log('montecarlo_returns> ', montecarlo_returns)
 
         return { state, table_data };
     }
