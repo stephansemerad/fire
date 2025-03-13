@@ -103,7 +103,6 @@ createApp({
             for (let i = 0; i <= (state.life_span - state.current_age); i++) {
 
                 savings = income - expense
-                cumulative_savings += savings
                 data.push(
                     {
                         year: i + state.current_age,
@@ -112,21 +111,22 @@ createApp({
                         balance_lower: balance_lower,
                         income: income,
                         expense: expense,
+                        retirement_income: retirement_income,
+                        retirement_expense: retirement_expense,
                         savings: savings,
-                        cumulative_savings: cumulative_savings,
-
                     }
                 );
                 if (i + state.current_age == state.retirement_age) {
                     income = retirement_income
-                    expense = state.retirement_expense
-                } else {
-
-                    retirement_income = Number(retirement_income * (1 + state.income_increase / 100)).toFixed(2)
-                    retirement_expense = Number(retirement_expense * (1 + state.inflation / 100)).toFixed(2)
+                    expense = retirement_expense
                 }
+
                 income *= (1 + state.income_increase / 100)
                 expense *= (1 + state.inflation / 100);
+
+                retirement_income *= (1 + state.income_increase / 100)
+                retirement_expense *= (1 + state.inflation / 100);
+
 
                 balance += savings
                 balance_upper += savings
@@ -694,8 +694,6 @@ createApp({
                 volatility: state.montecarlo_volatility / 100,      // 15% annual volatility
                 trials: state.montecarlo_trials
             });
-
-
 
 
 
