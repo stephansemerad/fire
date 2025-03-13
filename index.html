@@ -97,6 +97,7 @@
                 <div class="mx-auto px-4 py-8 sm:px-2 lg:px-8" id="app">
 
 
+
                     <!-- message -->
                     <div :class="{
                                 'bg-red-100 border border-red-400 text-red-700': state.retirement_age < state.fire_age,
@@ -127,11 +128,11 @@
 
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
-                        <div class="col-span-1 md:col-span-6 ">
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-2 my-2">
+                        <div class="col-span-1 md:col-span-12 ">
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-6 my-2">
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="current_age">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="current_age">
                                         Current Age
 
                                         <span data-tippy-content="Your current age in years">
@@ -144,7 +145,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_age">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="retirement_age">
                                         Expected Retirement Age
                                         <span data-tippy-content="The age you plan to retire">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -155,7 +156,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="life_span">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="life_span">
                                         Life Span
                                         <span
                                             data-tippy-content="Your expected life span in years / years to display on the Graph">
@@ -168,7 +169,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="balance">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="balance">
                                         Initial Balance Amount
                                         <span
                                             data-tippy-content="Your current savings balance / Starting or Initial amount">
@@ -181,7 +182,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="income">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="income">
                                         Annual Net Income
                                         <span data-tippy-content="Your annual income after taxes ">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -192,7 +193,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="expense">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="expense">
                                         Annual Expenses
                                         <span data-tippy-content="Your annual expenses / how much you spend per year">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -204,7 +205,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_income">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="retirement_income">
                                         Annual Retirement Income
                                         <span data-tippy-content="Your expected annual income during retirement">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -216,7 +217,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="retirement_expense">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="retirement_expense">
                                         Annual Retirement Expense
 
                                         <span data-tippy-content="Your expected annual expenses during retirement">
@@ -229,7 +230,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="return">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="return">
                                         Investment Return (%)
                                         <span data-tippy-content="Expected annual return on your investments">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -240,7 +241,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="inflation">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="inflation">
                                         Inflation (%)
                                         <span data-tippy-content="Expected annual inflation rate">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -251,7 +252,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="income_increase">
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="income_increase">
                                         Income Increase (%)
                                         <span data-tippy-content="Expected annual increase in income">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
@@ -262,7 +263,8 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-gray-800 font-bold mb-1" for="variance">Variance Return (%)
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="variance">Variance
+                                        Return (%)
                                         <span data-tippy-content="Variance in investment returns plus / minus %">
                                             <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
                                         </span>
@@ -277,6 +279,12 @@
                         <div class="col-span-1 md:col-span-6">
                             <canvas height="200" id="fire_chart"></canvas>
                         </div>
+
+                        <div class="col-span-1 md:col-span-6">
+                            <canvas height="200" id="montecarlo"></canvas>
+                        </div>
+
+
                         <div class="col-span-1 md:col-span-6">
                             <canvas height="200" id="msci_world"></canvas>
                         </div>
@@ -284,6 +292,8 @@
                         <div class="col-span-1 md:col-span-6">
                             <canvas height="200" id="sp500"></canvas>
                         </div>
+
+
 
                         <div class="col-span-1 md:col-span-12">
                             <!-- table -->
