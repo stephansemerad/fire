@@ -68,14 +68,14 @@ createApp({
                     income *= (1 + state.income_increase / 100)
                     expense *= (1 + state.inflation / 100);
 
-                    // console.log('age> ', i, 'balance> ', balance,)
+                    // // console.log('age> ', i, 'balance> ', balance,)
                     dictionary[i] = balance
 
                     balance += savings
                     balance *= (1 + state.return / 100);
                 }
                 ending_balance = balance
-                // console.log('retirement_age> ', retirement_age, 'ending_balance> ', Number(ending_balance).toFixed(2), 'amount> ', dictionary[retirement_age])
+                // // console.log('retirement_age> ', retirement_age, 'ending_balance> ', Number(ending_balance).toFixed(2), 'amount> ', dictionary[retirement_age])
 
                 if (ending_balance > 0) {
                     state.fire_age = retirement_age
@@ -238,8 +238,8 @@ createApp({
                 y: slope * point.year + intercept
             }));
 
-            // console.log('-----------')
-            // console.log('labels> ', data.map(d => d.year))
+            // // console.log('-----------')
+            // // console.log('labels> ', data.map(d => d.year))
 
 
             fire_chart.data.labels = data.map(d => d.year);
@@ -536,7 +536,7 @@ createApp({
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
-                    console.log('sp500> ', data)
+                    // console.log('sp500> ', data)
                     sp500.data.labels = get_simulation_labels()
                     sp500.data.datasets = get_historic_simulation_datasets(data)
                     sp500.update();
@@ -580,7 +580,7 @@ createApp({
 
             const simulation_result = {}
             for (const trial in montecarlo_returns) {
-                console.log('trial> ', trial)
+                // console.log('trial> ', trial)
 
                 let data = []
                 let balance = state.balance
@@ -623,77 +623,71 @@ createApp({
                 simulation_result['trial_' + trial + '_' + status] = data
             }
 
-
-            const datasets = Object.keys(simulation_result).map(year => {
-                const data = simulation_result[year].map(item => ({
-                    x: item.year, // Assuming item.year is actually representing age
-                    y: item.balance
-                }));
+            let end = state.life_span - state.current_age
 
 
-                const endBalance = simulation_result[year][20].balance;
+            function get_dataset_from_simulation(simulation_result, end) {
+                let datasets
+                datasets = Object.keys(simulation_result).map(year => {
+                    const data = simulation_result[year].map(item => ({
+                        x: item.year, // Assuming item.year is actually representing age
+                        y: item.balance
+                    }));
 
-                // Function to generate a random color of a specific hue
-                function getRandomColor(hue) {
-                    const saturation = Math.random() * 100; // Random saturation between 0 and 100
-                    const lightness = Math.random() * 100; // Random lightness between 0 and 100
-                    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-                }
+                    const ending_balance = simulation_result[year][end].balance;
 
-                // Set the border color based on the end balance
-                let borderColor;
+                    function getRandomColor(hue) { // Function to generate a random color of a specific hue
+                        const saturation = Math.random() * 100; // Random saturation between 0 and 100
+                        const lightness = Math.random() * 100; // Random lightness between 0 and 100
+                        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                    }
 
-                console.log('endBalance> ', endBalance)
+                    let borderColor; // Set the border color based on the end balance
+                    if (ending_balance > 0) {
+                        borderColor = getRandomColor(120, 60, 100, 60, 90); // Green with varying tone (lighter and more saturated)
+                    } else {
+                        borderColor = getRandomColor(0, 20, 60, 20, 50); // Red with varying tone (darker and less saturated)
+                    }
 
-                if (endBalance > 0) {
-                    // Green with varying tone (lighter and more saturated)
-                    borderColor = getRandomColor(120, 60, 100, 60, 90);
-                } else {
-                    // Red with varying tone (darker and less saturated)
-                    borderColor = getRandomColor(0, 20, 60, 20, 50);
-                }
+                    return {
+                        label: year,
+                        pointRadius: 0,
+                        data: data,
+                        borderColor: borderColor,
+                        tension: 0.2,
+                        borderWidth: 1
 
+                    };
+                });
 
-                return {
-                    label: year,
-                    pointRadius: 0,
-                    data: data,
-                    borderColor: borderColor,
-                    tension: 0.2,
-                    borderWidth: 1
+                datasets.push(
+                    {
+                        label: 'Fire Number (' + Number(state.fire_number / 1000).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'K )',
+                        data: new Array(table_data.value.length).fill(state.fire_number),
+                        borderColor: 'rgb(255, 99, 132)',
+                        borderWidth: 1,
+                        borderDash: [3, 3],
+                        pointRadius: 0,
+                        fill: false
+                    },
+                    {
+                        label: 'Fire Age (' + state.fire_age + ')',
+                        data: [
+                            { x: state.fire_age, y: 0 }, // Start point at y=0
+                            { x: state.fire_age, y: state.fire_number } // End point at y=100 (or the max y value of your chart)
+                        ],
+                        borderColor: 'rgb(255, 99, 132)',
+                        borderWidth: 1,
+                        borderDash: [3, 3], // Optional dashed line
+                        pointRadius: 0,
+                        fill: false
+                    },
+                )
+                return datasets
+            }
 
-                };
-            });
-
-            datasets.push(
-                {
-                    label: 'Fire Number (' + Number(state.fire_number / 1000).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'K )',
-                    data: new Array(table_data.value.length).fill(state.fire_number),
-                    borderColor: 'rgb(255, 99, 132)',
-                    borderWidth: 1,
-                    borderDash: [3, 3],
-                    pointRadius: 0,
-                    fill: false
-                },
-                {
-                    label: 'Fire Age (' + state.fire_age + ')',
-                    data: [
-                        { x: state.fire_age, y: 0 }, // Start point at y=0
-                        { x: state.fire_age, y: state.fire_number } // End point at y=100 (or the max y value of your chart)
-                    ],
-                    borderColor: 'rgb(255, 99, 132)',
-                    borderWidth: 1,
-                    borderDash: [3, 3], // Optional dashed line
-                    pointRadius: 0,
-                    fill: false
-                },
-            )
-
-
-            montecarlo.data.datasets = datasets
-            montecarlo.data.labels = get_simulation_labels(
-                state.life_span - state.current_age
-            )
+            montecarlo.data.datasets = get_dataset_from_simulation(simulation_result, end)
+            montecarlo.data.labels = get_simulation_labels(end)
             montecarlo.update()
         };
 
