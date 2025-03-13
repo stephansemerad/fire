@@ -69,15 +69,12 @@ createApp({
                     }
                     income *= (1 + state.income_increase / 100)
                     expense *= (1 + state.inflation / 100);
-
-                    // // console.log('age> ', i, 'balance> ', balance,)
                     dictionary[i] = balance
 
                     balance += savings
                     balance *= (1 + state.return / 100);
                 }
                 ending_balance = balance
-                // // console.log('retirement_age> ', retirement_age, 'ending_balance> ', Number(ending_balance).toFixed(2), 'amount> ', dictionary[retirement_age])
 
                 if (ending_balance > 0) {
                     state.fire_age = retirement_age
@@ -572,27 +569,80 @@ createApp({
             return results;
         }
 
-        const update_montecarlo = () => {
+        function get_dataset_from_simulation(simulation_result, end) {
+            let datasets
+            datasets = Object.keys(simulation_result).map(year => {
+                const data = simulation_result[year].map(item => ({
+                    x: item.year, // Assuming item.year is actually representing age
+                    y: item.balance
+                }));
 
-            montecarlo_returns = montecarlo_investment_returns({
-                years: (state.life_span - state.current_age),
-                expectedReturn: state.return / 100, // 7% annual expected return
-                volatility: state.montecarlo_volatility / 100,      // 15% annual volatility
-                trials: state.montecarlo_trials
+                const ending_balance = simulation_result[year][end].balance;
+
+                function getRandomColor(hue) { // Function to generate a random color of a specific hue
+                    const saturation = Math.random() * 100; // Random saturation between 0 and 100
+                    const lightness = Math.random() * 100; // Random lightness between 0 and 100
+                    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                }
+
+                let borderColor; // Set the border color based on the end balance
+                if (ending_balance > 0) {
+                    borderColor = getRandomColor(120, 60, 100, 60, 90); // Green with varying tone (lighter and more saturated)
+                } else {
+                    borderColor = getRandomColor(0, 20, 60, 20, 50); // Red with varying tone (darker and less saturated)
+                }
+
+                return {
+                    label: year,
+                    pointRadius: 0,
+                    data: data,
+                    borderColor: borderColor,
+                    tension: 0.2,
+                    borderWidth: 1
+
+                };
             });
 
-            const simulation_result = {}
-            for (const trial in montecarlo_returns) {
-                // console.log('trial> ', trial)
+            datasets.push(
+                {
+                    label: 'Fire Number (' + Number(state.fire_number / 1000).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'K )',
+                    data: new Array(table_data.value.length).fill(state.fire_number),
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1,
+                    borderDash: [3, 3],
+                    pointRadius: 0,
+                    fill: false
+                },
+                {
+                    label: 'Fire Age (' + state.fire_age + ')',
+                    data: [
+                        { x: state.fire_age, y: 0 }, // Start point at y=0
+                        { x: state.fire_age, y: state.fire_number } // End point at y=100 (or the max y value of your chart)
+                    ],
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1,
+                    borderDash: [3, 3], // Optional dashed line
+                    pointRadius: 0,
+                    fill: false
+                },
+            )
+            return datasets
+        }
 
-                let data = []
-                let balance = state.balance
-                let income = state.income
-                let expense = state.expense
-                let retirement_income = state.retirement_income
-                let retirement_expense = state.retirement_expense
-                let years = state.life_span - state.current_age
-                returns = montecarlo_returns[trial]
+
+        function run_simulation(simulation) {
+            // console.log('simulation> ', simulation)
+            const simulation_result = {}
+            for (const trial in simulation) {
+
+                data = []
+                balance = state.balance
+                income = state.income
+                expense = state.expense
+                retirement_income = state.retirement_income
+                retirement_expense = state.retirement_expense
+                years = state.life_span - state.current_age
+                returns = simulation[trial]
 
                 for (let i = 0; i <= (years); i++) {
                     savings = income - expense
@@ -621,80 +671,39 @@ createApp({
                     }
                 }
 
-                console.log(balance)
-
+                let statuses = { 'ok': 0, 'notok': 0 }
                 let status
                 if (balance < 0) {
                     status = 'notok'
+                    statuses['ok'] += 1
                 } else {
                     status = 'ok'
+                    statuses['notok'] += 1
                 }
-                console.log('status> ', status, balance)
                 simulation_result['trial ' + trial + ' (' + status + ')'] = data
             }
+            return simulation_result
+        }
+
+
+        const update_montecarlo = () => {
+
+            montecarlo_returns = montecarlo_investment_returns({
+                years: (state.life_span - state.current_age),
+                expectedReturn: state.return / 100, // 7% annual expected return
+                volatility: state.montecarlo_volatility / 100,      // 15% annual volatility
+                trials: state.montecarlo_trials
+            });
+
+
+
+
+
+            let simulation_result = run_simulation(montecarlo_returns)
 
             let end = state.life_span - state.current_age
 
 
-            function get_dataset_from_simulation(simulation_result, end) {
-                let datasets
-                datasets = Object.keys(simulation_result).map(year => {
-                    const data = simulation_result[year].map(item => ({
-                        x: item.year, // Assuming item.year is actually representing age
-                        y: item.balance
-                    }));
-
-                    const ending_balance = simulation_result[year][end].balance;
-
-                    function getRandomColor(hue) { // Function to generate a random color of a specific hue
-                        const saturation = Math.random() * 100; // Random saturation between 0 and 100
-                        const lightness = Math.random() * 100; // Random lightness between 0 and 100
-                        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-                    }
-
-                    let borderColor; // Set the border color based on the end balance
-                    if (ending_balance > 0) {
-                        borderColor = getRandomColor(120, 60, 100, 60, 90); // Green with varying tone (lighter and more saturated)
-                    } else {
-                        borderColor = getRandomColor(0, 20, 60, 20, 50); // Red with varying tone (darker and less saturated)
-                    }
-
-                    return {
-                        label: year,
-                        pointRadius: 0,
-                        data: data,
-                        borderColor: borderColor,
-                        tension: 0.2,
-                        borderWidth: 1
-
-                    };
-                });
-
-                datasets.push(
-                    {
-                        label: 'Fire Number (' + Number(state.fire_number / 1000).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'K )',
-                        data: new Array(table_data.value.length).fill(state.fire_number),
-                        borderColor: 'rgb(255, 99, 132)',
-                        borderWidth: 1,
-                        borderDash: [3, 3],
-                        pointRadius: 0,
-                        fill: false
-                    },
-                    {
-                        label: 'Fire Age (' + state.fire_age + ')',
-                        data: [
-                            { x: state.fire_age, y: 0 }, // Start point at y=0
-                            { x: state.fire_age, y: state.fire_number } // End point at y=100 (or the max y value of your chart)
-                        ],
-                        borderColor: 'rgb(255, 99, 132)',
-                        borderWidth: 1,
-                        borderDash: [3, 3], // Optional dashed line
-                        pointRadius: 0,
-                        fill: false
-                    },
-                )
-                return datasets
-            }
 
             montecarlo.data.datasets = get_dataset_from_simulation(simulation_result, end)
             montecarlo.data.labels = get_simulation_labels(end)
@@ -708,11 +717,7 @@ createApp({
             update_msci_world();
             update_sp500();
             update_montecarlo();
-
         };
-
-
-
 
         watch(state, () => update(), { deep: true });
 
@@ -722,11 +727,8 @@ createApp({
 
             msci_world = set_up_graph('msci_world', 'MSCI World (20 yr)')
             sp500 = set_up_graph('sp500', 'S&P 500 (20 yr)')
-            montecarlo = set_up_graph('montecarlo', 'Montecarlo (Volatility 15%)')
-
-
+            montecarlo = set_up_graph('montecarlo', 'Montecarlo')
         });
-
 
         return { state, table_data };
     }
