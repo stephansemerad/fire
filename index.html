@@ -273,6 +273,32 @@
                                         class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
                                 </div>
 
+                                <div>
+                                    <label class="block text-xs text-gray-800 font-bold mb-1"
+                                        for="montecarlo_volatility">
+                                        Montecarlo Volatility (%)
+                                        <span
+                                            data-tippy-content="How much Volatility should be in the Montecarlo model">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.montecarlo_volatility" type="number"
+                                        id="montecarlo_volatility"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-gray-800 font-bold mb-1" for="montecarlo_trials">
+                                        Montecarlo Trials
+                                        <span
+                                            data-tippy-content="How many return lines the Montecarlo model should calculate">
+                                            <i class="fa-solid fa-circle-info ml-1 h-3 w-3 text-indigo-400"></i>
+                                        </span>
+                                    </label>
+                                    <input v-model="state.montecarlo_trials" type="number" id="montecarlo_trials"
+                                        class="shadow-sm border rounded-xs w-full py-1 px-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                                </div>
+
 
                             </div>
                         </div>

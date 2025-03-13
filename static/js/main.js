@@ -21,6 +21,8 @@ createApp({
             variance: 0.3,
             income_increase: 3,
             inflation: 3.7,
+            montecarlo_volatility: 15,
+            montecarlo_trials: 15,
             fire_age: null,
             fire_number: null,
         });
@@ -115,6 +117,7 @@ createApp({
                         expense: expense,
                         savings: savings,
                         cumulative_savings: cumulative_savings,
+
                     }
                 );
                 if (i + state.current_age == state.retirement_age) {
@@ -593,6 +596,7 @@ createApp({
 
                 for (let i = 0; i <= (years); i++) {
                     savings = income - expense
+
                     data.push(
                         {
                             year: i + state.current_age,
@@ -606,7 +610,6 @@ createApp({
                         income = retirement_income
                         expense = state.retirement_expense
                     } else {
-
                         retirement_income = Number(retirement_income * (1 + state.income_increase / 100)).toFixed(2)
                         retirement_expense = Number(retirement_expense * (1 + state.inflation / 100)).toFixed(2)
                     }
