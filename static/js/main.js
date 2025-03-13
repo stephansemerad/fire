@@ -575,7 +575,7 @@ createApp({
                 years: (state.life_span - state.current_age),
                 expectedReturn: state.return / 100, // 7% annual expected return
                 volatility: 0.15,      // 15% annual volatility
-                trials: 10
+                trials: 16
             });
 
             const simulation_result = {}
@@ -610,17 +610,24 @@ createApp({
                         retirement_income = Number(retirement_income * (1 + state.income_increase / 100)).toFixed(2)
                         retirement_expense = Number(retirement_expense * (1 + state.inflation / 100)).toFixed(2)
                     }
-                    income *= (1 + state.income_increase / 100)
-                    expense *= (1 + state.inflation / 100);
-                    balance += savings
-                    balance *= (1 + returns[i]);
-
+                    if (i != years) {
+                        income *= (1 + state.income_increase / 100)
+                        expense *= (1 + state.inflation / 100);
+                        balance += savings
+                        balance *= (1 + returns[i]);
+                    }
                 }
-                let status = 'ok'
+
+                console.log(balance)
+
+                let status
                 if (balance < 0) {
                     status = 'notok'
+                } else {
+                    status = 'ok'
                 }
-                simulation_result['trial_' + trial + '_' + status] = data
+                console.log('status> ', status, balance)
+                simulation_result['trial ' + trial + ' (' + status + ')'] = data
             }
 
             let end = state.life_span - state.current_age
