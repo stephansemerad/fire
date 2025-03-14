@@ -583,7 +583,12 @@ createApp({
                     y: item.balance
                 }));
 
-                const ending_balance = simulation_result[year][end].balance;
+                if (end <= 0) {
+                    const ending_balance = 0
+                } else {
+                    const ending_balance = simulation_result[year][end].balance;
+                }
+
 
                 function getRandomColor(hue) { // Function to generate a random color of a specific hue
                     const saturation = Math.random() * 100; // Random saturation between 0 and 100
