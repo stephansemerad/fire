@@ -707,12 +707,9 @@ createApp({
             });
 
 
-
             let simulation_result = run_simulation(montecarlo_returns)
 
             let end = state.life_span - state.current_age
-
-
 
             montecarlo.data.datasets = get_dataset_from_simulation(simulation_result, end)
             montecarlo.data.labels = get_simulation_labels(end)
