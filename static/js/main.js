@@ -551,167 +551,18 @@ createApp({
         };
 
 
-        function montecarlo_investment_returns({ years, expectedReturn, volatility = 0.1, trials = 10 }) {
-            // Generate normally distributed random numbers using Box-Muller transform
-            function getNormal() {
-                let u1 = 0, u2 = 0;
-                while (u1 === 0) u1 = Math.random(); // Avoid zero values
-                while (u2 === 0) u2 = Math.random();
-                return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-            }
-
-            const results = [];
-            for (let i = 0; i < trials; i++) {
-                let portfolioValue = 1; // Normalized initial investment
-                const annualReturns = [];
-
-                for (let year = 0; year < years; year++) {
-                    const randomReturn = expectedReturn + volatility * getNormal();
-                    portfolioValue *= (1 + randomReturn);
-                    annualReturns.push(randomReturn);
-                }
-                results.push(annualReturns);
-            }
-            return results;
-        }
-
-        function get_dataset_from_simulation(simulation_result, end) {
-            let datasets
-            datasets = Object.keys(simulation_result).map(year => {
-                const data = simulation_result[year].map(item => ({
-                    x: item.year, // Assuming item.year is actually representing age
-                    y: item.balance
-                }));
-
-                if (end <= 0) {
-                    const ending_balance = 0
-                } else {
-                    const ending_balance = simulation_result[year][end].balance;
-                }
-
-
-                function getRandomColor(hue) { // Function to generate a random color of a specific hue
-                    const saturation = Math.random() * 100; // Random saturation between 0 and 100
-                    const lightness = Math.random() * 100; // Random lightness between 0 and 100
-                    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-                }
-
-                let borderColor; // Set the border color based on the end balance
-                if (ending_balance > 0) {
-                    borderColor = getRandomColor(120, 60, 100, 60, 90); // Green with varying tone (lighter and more saturated)
-                } else {
-                    borderColor = getRandomColor(0, 20, 60, 20, 50); // Red with varying tone (darker and less saturated)
-                }
-
-                return {
-                    label: year,
-                    pointRadius: 0,
-                    data: data,
-                    borderColor: borderColor,
-                    tension: 0.2,
-                    borderWidth: 1
-
-                };
-            });
-
-            datasets.push(
-                {
-                    label: 'Fire Number (' + Number(state.fire_number / 1000).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + 'K )',
-                    data: new Array(table_data.value.length).fill(state.fire_number),
-                    borderColor: 'rgb(255, 99, 132)',
-                    borderWidth: 1,
-                    borderDash: [3, 3],
-                    pointRadius: 0,
-                    fill: false
-                },
-                {
-                    label: 'Fire Age (' + state.fire_age + ')',
-                    data: [
-                        { x: state.fire_age, y: 0 }, // Start point at y=0
-                        { x: state.fire_age, y: state.fire_number } // End point at y=100 (or the max y value of your chart)
-                    ],
-                    borderColor: 'rgb(255, 99, 132)',
-                    borderWidth: 1,
-                    borderDash: [3, 3], // Optional dashed line
-                    pointRadius: 0,
-                    fill: false
-                },
-            )
-            return datasets
-        }
-
-
-        function run_simulation(simulation) {
-            // console.log('simulation> ', simulation)
-            const simulation_result = {}
-            for (const trial in simulation) {
-
-                data = []
-                balance = state.balance
-                income = state.income
-                expense = state.expense
-                retirement_income = state.retirement_income
-                retirement_expense = state.retirement_expense
-                years = state.life_span - state.current_age
-                returns = simulation[trial]
-
-                for (let i = 0; i <= (years); i++) {
-                    savings = income - expense
-
-                    data.push(
-                        {
-                            year: i + state.current_age,
-                            balance: balance,
-                            income: income,
-                            expense: expense,
-                            savings: savings,
-                        }
-                    );
-                    if (i + state.current_age == state.retirement_age) {
-                        income = retirement_income
-                        expense = state.retirement_expense
-                    } else {
-                        retirement_income = Number(retirement_income * (1 + state.income_increase / 100)).toFixed(2)
-                        retirement_expense = Number(retirement_expense * (1 + state.inflation / 100)).toFixed(2)
-                    }
-                    if (i != years) {
-                        income *= (1 + state.income_increase / 100)
-                        expense *= (1 + state.inflation / 100);
-                        balance += savings
-                        balance *= (1 + returns[i]);
-                    }
-                }
-
-                let statuses = { 'ok': 0, 'notok': 0 }
-                let status
-                if (balance < 0) {
-                    status = 'notok'
-                    statuses['ok'] += 1
-                } else {
-                    status = 'ok'
-                    statuses['notok'] += 1
-                }
-                simulation_result['trial ' + trial + ' (' + status + ')'] = data
-            }
-            return simulation_result
-        }
-
-
         const update_montecarlo = () => {
 
-            montecarlo_returns = montecarlo_investment_returns({
+            montecarlo_returns = montecarlo_returns_simulation({
                 years: (state.life_span - state.current_age),
                 expectedReturn: state.return / 100, // 7% annual expected return
                 volatility: state.montecarlo_volatility / 100,      // 15% annual volatility
                 trials: state.montecarlo_trials
             });
 
-
-            let simulation_result = run_simulation(montecarlo_returns)
-
+            let simulation_result = run_simulation(montecarlo_returns, state)
             let end = state.life_span - state.current_age
-
-            montecarlo.data.datasets = get_dataset_from_simulation(simulation_result, end)
+            montecarlo.data.datasets = get_dataset_from_simulation(simulation_result, end, state)
             montecarlo.data.labels = get_simulation_labels(end)
             montecarlo.update()
         };
